@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pokemon</title>
+    <style>
+      .Pokemon-card {
+        border: 1px solid lightsteelblue;
+        padding: 10px;
+        margin: 5px;
+        display: inline-block;
+        text-align: center;
+        cursor: pointer;
+        border-radius: 8px; /* เพิ่มความโค้งมนให้น่ารักขึ้นนิดนึง */
+        transition:
+          transform 0.2s,
+          outline 0.2s; /* ให้ตอนกดเลือกมันเด้งสมูทๆ */
+      }
+
+      .selected {
+        outline: 3px dashed lightblue; /*outline ไม่ให้ card ขยับ */
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Fetch Pokemon Exercise</h1>
+    <h3>Let's see what you got!</h3>
+
+    <button id="addPokemon" style="background-color: #a8c69f">
+      Add Random Pokemon
+    </button>
+    <button id="removeBtn" style="background-color: #d68080">
+      Remove Pokemon
+    </button>
+
+    <div
+      id="pokemonList"
+      style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px"
+    ></div>
+
+    <script src="04_index.js"></script>
+  </body>
+</html>

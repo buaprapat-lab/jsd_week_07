@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="display">0</h1>
+    <button id="increaseBtn">Increase value</button>
+
+    <script>
+      // 1.ประกาศตัวแปร global ไว้ข้างนอกเพื่อเก็บสะสมค่าเลข
+      let count = 0;
+
+      //2.เลือก element ที่ต้องการใช้งาน
+      const display = document.querySelector("#display");
+      const button = document.querySelector("#increaseBtn");
+
+      //3.สร้าง dunction สำหรับเพิ่มตัวเลข
+      function increment() {
+        count++; // คล้ายที่เคยเรียน i++ คือการบวกเพิ่มทีละ 1
+        display.innerText = count; //. เอาค่าใหม่ไปโชว์หน้าเว็ป
+      }
+
+      //4. เชื่อม button - function
+      button.addEventListener("click", increment);
+    </script>
+  </body>
+</html>

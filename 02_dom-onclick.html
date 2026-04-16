@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="display">0</h1>
+    <button id="increaseBtn" onclick="increment()">Increase value</button>
+
+    <script>
+      let count = 0; //เริ่มต้น
+      const display = document.querySelector("#display"); // เข้าไปเลือกว่าจะเปลี่ยนแปลงตัวแปร display นี้
+
+      //สร้าง functiom เตรียมไว้
+      function increment() {
+        count++; //ให้เลขเพิ่มขึ้นทีละ 1
+        display.innerText = count; //ก็คือให้ text เปลี่ยนค่าไปตาม count++
+      }
+    </script>
+  </body>
+</html>

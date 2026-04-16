@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="jsdTag">JSD12</h1>
+    <button id="magicBtn">Click Me!</button>
+
+    <script>
+      // แก้ไข button
+      const button = document.querySelector("#magicBtn");
+      button.addEventListener("click", () => {
+        // โค้ดที่อยากให้ทำงานตอน click จะเขียนตรงนี้
+
+        // แก้ไข JSD12
+        // 1. เลือก (Select): ใช้ id ในการระบุเป้าหมาย
+        const title = document.querySelector("#jsdTag");
+        // เช็คเฉยๆ ลอง Log ดูว่าในตัวแปร title มีข้อมูลอะไรอยู่ข้างใน
+        console.log(title);
+        //  2. Change color โดยเข้าปที่ stle แล้วเลือก color ตัวแปร = title, ตั้วขื่อ property ว่า style
+        title.style.color = "pink";
+        // 3. แก้ไขเข้าไปที่ style ต่างๆ ที่อยากจะลอง
+        title.style.fontWeight = "bold";
+        title.style.backgroundColor = "grey"; // พื้นหลังเทา
+        title.style.fontSize = "50px";
+        title.style.textAlign = "center";
+        title.style.border = "5px solid cream";
+        title.style.opacity = "0.5"; // ตัวหนังสือจางลง
+        // เปลี่ยนจาก JSD12 เป็น KOOKOO -dot เพื่อเข้าไปใน object
+        title.innerText = "KOOKOO";
+      });
+    </script>
+  </body>
+</html>

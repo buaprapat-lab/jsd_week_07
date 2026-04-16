@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minimal Cookie Clicker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Animation เล็กๆ เวลากดคุกกี้ให้ดูมีชีวิตชีวา */
+      .cookie-active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-slate-900 text-slate-100 font-sans min-h-screen flex flex-col md:flex-row selection:bg-yellow-500/30"
+  >
+    <main
+      class="flex-1 flex flex-col items-center justify-center p-8 border-b md:border-b-0 md:border-r border-slate-700 relative"
+    >
+      <div class="text-center mb-10">
+        <h1
+          class="text-xl text-slate-400 font-medium tracking-widest uppercase mb-2"
+        >
+          Bakery
+        </h1>
+        <div class="text-5xl font-black text-yellow-400 mb-2">
+          <span id="score-display">0</span>
+        </div>
+        <div
+          class="text-sm text-slate-400 bg-slate-800 py-1 px-3 rounded-full inline-block"
+        >
+          <span id="cps-display">0</span> cookies per second
+        </div>
+      </div>
+
+      <button
+        id="cookie-btn"
+        class="text-[150px] leading-none transition-transform duration-75 outline-none drop-shadow-2xl select-none hover:scale-105"
+      >
+        🍪
+      </button>
+    </main>
+
+    <aside class="w-full md:w-96 bg-slate-800/50 p-6 flex flex-col shadow-2xl">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        <span>🛒</span> Upgrades
+      </h2>
+
+      <button
+        id="buy-cursor-btn"
+        class="group flex items-center justify-between p-4 bg-slate-800 border border-slate-700 hover:border-slate-500 rounded-xl transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-slate-700"
+      >
+        <div class="flex items-center gap-4">
+          <div
+            class="w-12 h-12 bg-slate-700 rounded-lg flex items-center justify-center text-2xl group-hover:bg-slate-600 transition-colors"
+          >
+            🖱️
+          </div>
+          <div class="text-left">
+            <h3 class="font-bold text-lg">Cursor</h3>
+            <p class="text-sm text-slate-400">
+              Cost:
+              <span id="cursor-cost" class="text-yellow-400 font-semibold"
+                >10</span
+              >
+            </p>
+          </div>
+        </div>
+        <div
+          class="text-3xl font-black text-slate-600 group-hover:text-slate-500 transition-colors"
+        >
+          <span id="cursor-count">0</span>
+        </div>
+      </button>
+    </aside>
+
+    <script>
+      // --- 1. ตั้งค่าตัวแปรสถานะเกม (State) ---
+      let cookies = 0;
+      let cookiesPerSecond = 0;
+
+      // ข้อมูลของการอัปเกรด
+      let cursorCost = 10;
+      let cursorCount = 0;
+      const cursorPower = 1; // ซื้อ 1 ครั้ง ได้กี่คุกกี้ต่อวินาที
+
+      // --- 2. อ้างอิง DOM Elements ---
+      const scoreDisplay = document.getElementById("score-display");
+      const cpsDisplay = document.getElementById("cps-display");
+      const cookieBtn = document.getElementById("cookie-btn");
+
+      const buyCursorBtn = document.getElementById("buy-cursor-btn");
+      const cursorCostDisplay = document.getElementById("cursor-cost");
+      const cursorCountDisplay = document.getElementById("cursor-count");
+
+      // --- 3. ฟังก์ชันอัปเดตหน้าจอหลัก (UI Update) ---
+      function updateUI() {
+        // อัปเดตตัวเลข (ใช้ Math.floor เพื่อไม่ให้แสดงทศนิยมยาวเกินไปเวลาคำนวณ)
+        scoreDisplay.textContent = Math.floor(cookies).toLocaleString();
+        cpsDisplay.textContent = cookiesPerSecond.toFixed(1);
+
+        cursorCostDisplay.textContent = cursorCost.toLocaleString();
+        cursorCountDisplay.textContent = cursorCount;
+
+        // ตรวจสอบว่าเงินพอซื้ออัปเกรดไหม เพื่อเปิด/ปิด การกดปุ่ม
+        if (cookies >= cursorCost) {
+          buyCursorBtn.disabled = false;
+        } else {
+          buyCursorBtn.disabled = true;
+        }
+      }
+
+      // --- 4. จัดการ Events ---
+
+      // เมื่อคลิกคุกกี้
+      cookieBtn.addEventListener("mousedown", () => {
+        cookies++; // เพิ่มทีละ 1
+        cookieBtn.classList.add("cookie-active"); // ใส่ effect ยุบตัว
+        updateUI();
+      });
+
+      // เอา effect ยุบตัวออกเมื่อปล่อยเมาส์
+      cookieBtn.addEventListener("mouseup", () => {
+        cookieBtn.classList.remove("cookie-active");
+      });
+      cookieBtn.addEventListener("mouseleave", () => {
+        cookieBtn.classList.remove("cookie-active");
+      });
+
+      // เมื่อกดซื้อ Cursor
+      buyCursorBtn.addEventListener("click", () => {
+        if (cookies >= cursorCost) {
+          // หักเงิน
+          cookies -= cursorCost;
+
+          // เพิ่มของ
+          cursorCount++;
+          cookiesPerSecond += cursorPower;
+
+          // เพิ่มราคารอบถัดไป (แพงขึ้น 15%)
+          cursorCost = Math.ceil(cursorCost * 1.15);
+
+          updateUI();
+        }
+      });
+
+      // --- 5. ระบบ Idle (รันอัตโนมัติ) ---
+      // ใช้ setInterval สั่งให้รันฟังก์ชันนี้ทุกๆ 1 วินาที (1000 มิลลิวินาที)
+      setInterval(() => {
+        if (cookiesPerSecond > 0) {
+          cookies += cookiesPerSecond;
+          updateUI();
+        }
+      }, 1000);
+
+      // โหลด UI ครั้งแรกเมื่อเริ่มเกม
+      updateUI();
+    </script>
+  </body>
+</html>
