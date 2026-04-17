@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Captain Cookie's Planet Cruncher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* 🌌 สร้างพื้นหลังอวกาศแบบง่ายๆ */
+      body {
+        background-color: #0f172a;
+        background-image: radial-gradient(
+          circle at 50% 50%,
+          #1e1b4b 0%,
+          #0f172a 100%
+        );
+        overflow: hidden;
+      }
+
+      /* ✨ กิมมิคดุ๊กดิ๊ก: ดาวเคราะห์ลอยไปมา */
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px) rotate(0deg);
+        }
+        50% {
+          transform: translateY(-15px) rotate(2deg);
+        }
+      }
+      .animate-float {
+        animation: float 4s ease-in-out infinite;
+      }
+
+      /* 🚀 กิมมิคคลิก: ตัวเลข/คุกกี้ลอยขึ้นเวลาคลิก */
+      @keyframes floatUp {
+        0% {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-100px) scale(1.5);
+        }
+      }
+      .click-particle {
+        position: absolute;
+        pointer-events: none;
+        animation: floatUp 1s ease-out forwards;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        z-index: 50;
+      }
+
+      /* Effect เวลากดดาวเคราะห์ */
+      .planet-active {
+        transform: scale(0.9) !important;
+        transition: transform 0.05s;
+      }
+    </style>
+  </head>
+  <body
+    class="text-indigo-100 font-sans min-h-screen flex flex-col md:flex-row selection:bg-fuchsia-500/30 font-bold"
+  >
+    <main class="flex-1 flex flex-col items-center justify-center p-8 relative">
+      <div class="absolute top-10 left-10 text-4xl animate-pulse">🛸</div>
+      <div class="absolute bottom-20 right-20 text-3xl opacity-50">✨</div>
+
+      <div class="text-center mb-12 z-10">
+        <h1
+          class="text-2xl text-fuchsia-400 tracking-widest uppercase mb-4 drop-shadow-[0_0_8px_rgba(192,38,211,0.8)]"
+        >
+          Captain Cookie's Void
+        </h1>
+        <div
+          class="text-7xl font-black text-amber-400 mb-2 drop-shadow-[0_0_15px_rgba(251,191,36,0.6)]"
+        >
+          <span id="score-display">0</span>
+        </div>
+        <div
+          class="text-sm bg-indigo-900/60 border border-indigo-500/30 py-2 px-6 rounded-full inline-block backdrop-blur-sm"
+        >
+          <span class="text-fuchsia-300">Cravings/Sec:</span>
+          <span id="cps-display">0</span>
+        </div>
+      </div>
+
+      <button
+        id="planet-btn"
+        class="relative text-[200px] leading-none outline-none select-none animate-float transition-transform duration-200 hover:scale-110 drop-shadow-[0_0_40px_rgba(217,119,6,0.4)] z-20"
+      >
+        🍪
+        <div class="absolute -top-4 -right-4 text-[60px] drop-shadow-xl z-30">
+          👾
+        </div>
+      </button>
+    </main>
+
+    <aside
+      class="w-full md:w-[400px] bg-indigo-950/80 backdrop-blur-md p-6 flex flex-col border-l border-indigo-500/20 shadow-2xl z-30 z-10 overflow-y-auto"
+    >
+      <h2
+        class="text-3xl font-black mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-fuchsia-500"
+      >
+        Space Upgrades
+      </h2>
+
+      <div class="flex flex-col gap-4">
+        <button
+          id="buy-laser-btn"
+          class="group relative overflow-hidden flex items-center justify-between p-4 bg-indigo-900/50 border-2 border-indigo-800 hover:border-fuchsia-500 rounded-2xl transition-all duration-300 disabled:opacity-40 disabled:grayscale disabled:cursor-not-allowed"
+        >
+          <div
+            class="absolute inset-0 bg-gradient-to-r from-transparent via-fuchsia-500/10 to-transparent -translate-x-full group-hover:translate-x-full duration-1000 transition-transform"
+          ></div>
+
+          <div class="flex items-center gap-4 relative z-10">
+            <div
+              class="w-14 h-14 bg-indigo-800 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform"
+            >
+              🔦
+            </div>
+            <div class="text-left">
+              <h3 class="font-black text-lg text-fuchsia-300">Laser Spatula</h3>
+              <p class="text-sm text-indigo-300">
+                Cost: <span id="laser-cost" class="text-amber-400">10</span> 🍪
+              </p>
+            </div>
+          </div>
+          <div
+            class="text-4xl font-black text-indigo-950 opacity-50 group-hover:opacity-100 group-hover:text-fuchsia-500/20 transition-all absolute right-4"
+          >
+            <span id="laser-count">0</span>
+          </div>
+        </button>
+
+        <button
+          id="buy-grandma-btn"
+          class="group relative overflow-hidden flex items-center justify-between p-4 bg-indigo-900/50 border-2 border-indigo-800 hover:border-cyan-400 rounded-2xl transition-all duration-300 disabled:opacity-40 disabled:grayscale disabled:cursor-not-allowed"
+        >
+          <div class="flex items-center gap-4 relative z-10">
+            <div
+              class="w-14 h-14 bg-indigo-800 rounded-xl flex items-center justify-center text-3xl shadow-inner group-hover:scale-110 transition-transform"
+            >
+              👵🏼🚀
+            </div>
+            <div class="text-left">
+              <h3 class="font-black text-lg text-cyan-300">Astro-Grandma</h3>
+              <p class="text-sm text-indigo-300">
+                Cost:
+                <span id="grandma-cost" class="text-amber-400">100</span> 🍪
+              </p>
+            </div>
+          </div>
+          <div
+            class="text-4xl font-black text-indigo-950 opacity-50 group-hover:opacity-100 group-hover:text-cyan-400/20 transition-all absolute right-4"
+          >
+            <span id="grandma-count">0</span>
+          </div>
+        </button>
+      </div>
+    </aside>
+
+    <script>
+      // --- State Management ---
+      let cookies = 0;
+      let cpm = 0; // Cravings Per Second
+
+      // Item: Laser (เหมือน Cursor)
+      let laserCost = 10;
+      let laserCount = 0;
+      const laserPower = 1;
+
+      // Item: Grandma
+      let grandmaCost = 100;
+      let grandmaCount = 0;
+      const grandmaPower = 5; // แรงกว่า!
+
+      // --- DOM Elements ---
+      const scoreDisplay = document.getElementById("score-display");
+      const cpsDisplay = document.getElementById("cps-display");
+      const planetBtn = document.getElementById("planet-btn");
+
+      const buyLaserBtn = document.getElementById("buy-laser-btn");
+      const laserCostDisplay = document.getElementById("laser-cost");
+      const laserCountDisplay = document.getElementById("laser-count");
+
+      const buyGrandmaBtn = document.getElementById("buy-grandma-btn");
+      const grandmaCostDisplay = document.getElementById("grandma-cost");
+      const grandmaCountDisplay = document.getElementById("grandma-count");
+
+      // --- UI Updater ---
+      function updateUI() {
+        scoreDisplay.textContent = Math.floor(cookies).toLocaleString();
+        cpsDisplay.textContent = cpm.toFixed(1);
+
+        laserCostDisplay.textContent = laserCost.toLocaleString();
+        laserCountDisplay.textContent = laserCount;
+        buyLaserBtn.disabled = cookies < laserCost;
+
+        grandmaCostDisplay.textContent = grandmaCost.toLocaleString();
+        grandmaCountDisplay.textContent = grandmaCount;
+        buyGrandmaBtn.disabled = cookies < grandmaCost;
+      }
+
+      // --- 🪄 Gimmick: สร้าง Particle เวลาคลิก ---
+      function createClickParticle(e) {
+        const texts = ["+1", "OMNOM!", "🍪"];
+        const randomText = texts[Math.floor(Math.random() * texts.length)];
+
+        const particle = document.createElement("div");
+        particle.classList.add("click-particle");
+
+        // สุ่มสีให้ Particle
+        const colors = ["text-amber-400", "text-fuchsia-400", "text-cyan-400"];
+        particle.classList.add(
+          colors[Math.floor(Math.random() * colors.length)],
+        );
+        particle.textContent = randomText;
+
+        // ตำแหน่งสุ่มรอบๆ เมาส์
+        const x = e.clientX + (Math.random() * 40 - 20);
+        const y = e.clientY + (Math.random() * 40 - 20);
+
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+
+        document.body.appendChild(particle);
+
+        // ลบทิ้งเมื่อ animation จบ (1 วินาที)
+        setTimeout(() => {
+          particle.remove();
+        }, 1000);
+      }
+
+      // --- Events ---
+      planetBtn.addEventListener("mousedown", (e) => {
+        cookies++;
+        planetBtn.classList.add("planet-active");
+        planetBtn.classList.remove("animate-float"); // หยุดลอยแปบนึงตอนโดนตี
+        createClickParticle(e);
+        updateUI();
+      });
+
+      planetBtn.addEventListener("mouseup", () => {
+        planetBtn.classList.remove("planet-active");
+        planetBtn.classList.add("animate-float");
+      });
+      planetBtn.addEventListener("mouseleave", () => {
+        planetBtn.classList.remove("planet-active");
+        planetBtn.classList.add("animate-float");
+      });
+
+      // ซื้อ Laser
+      buyLaserBtn.addEventListener("click", () => {
+        if (cookies >= laserCost) {
+          cookies -= laserCost;
+          laserCount++;
+          cpm += laserPower;
+          laserCost = Math.ceil(laserCost * 1.5);
+          updateUI();
+        }
+      });
+
+      // ซื้อ Grandma
+      buyGrandmaBtn.addEventListener("click", () => {
+        if (cookies >= grandmaCost) {
+          cookies -= grandmaCost;
+          grandmaCount++;
+          cpm += grandmaPower;
+          grandmaCost = Math.ceil(grandmaCost * 1.5);
+          updateUI();
+        }
+      });
+
+      // --- ออโต้รัน (Idle) ---
+      setInterval(() => {
+        if (cpm > 0) {
+          cookies += cpm;
+          updateUI();
+        }
+      }, 1000);
+
+      // Init
+      updateUI();
+    </script>
+  </body>
+</html>
