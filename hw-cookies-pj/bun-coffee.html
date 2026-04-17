@@ -1,27 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wake Up, Bun!</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wake Up, Bun!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap"
-      rel="stylesheet">
-    <link href="bun-styles.css" rel="stylesheet">
+      rel="stylesheet"
+    />
+    <link href="bun-styles.css" rel="stylesheet" />
     <script src="bun-func.js" defer></script>
-    <script src="https://unpkg.com/lucide@latest" defer></script> 
-
-</head>
-<body>
-  
-<div id="game">
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <div id="game">
       <canvas id="stars-canvas"></canvas>
       <div id="flash"></div>
       <div id="toast-area"></div>
 
-        <!-- ===== BUN ลอยขึ้นบนฟ้าตอน Win &
+      <!-- ===== BUN ลอยขึ้นบนฟ้าตอน Win &
          ========= หน้า reset game =========-->
 
       <div id="win-overlay">
@@ -29,17 +28,17 @@
         <div id="win-sub">
           10,000 java beans brewed.<br />A legendary barista.
         </div>
-        <div id="win-stats"</div>
+        <div id="win-stats"></div>
         <button id="win-btn" onclick="resetGame()">Brew Again</button>
       </div>
 
-       <!-- ===== ส่วน LOGO + nav menu ==
+      <!-- ===== ส่วน LOGO + nav menu ==
          ===========================-->
 
       <div id="header">
         <div id="game-title">Wake Up, Bun!</div>
         <div id="idle-pill">
-          <i data-lucide="ev-charger"></i>
+          <i data-lucide="zap"></i>
           <span id="idle-disp">0.1/s</span>
         </div>
       </div>
@@ -58,7 +57,8 @@
             <svg
               id="ring-svg"
               viewBox="0 0 240 240"
-             xmlns="http://www.w3.org/2000/svg">
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <!--โครงร่างวงกลม สร้างเป็นร่างไว้ค่อยให้ fill มาเติม-->
               <circle
                 cx="120"
@@ -67,7 +67,10 @@
                 fill="none"
                 stroke="rgba(188,113,20,0.10)"
                 stroke-width="6"
-                stroke-linecap="round">
+                stroke-linecap="round"
+              />
+
+              <!-- กลุ่มสำหรับแบ่ง Segment (ถ้ามี JS มาเติม) -->
               <g id="ring-segs"></g>
 
               <!--ส่่วนที่จะมา fill สร้างและซ่อนไว้รอ JS ลดค่าเป็น 0 ให้เต็มรอบวง 100% 
@@ -87,7 +90,7 @@
                 style="transition: stroke-dashoffset 0.35s ease"
               />
 
-               <!--สร้าง head ของเส้นที่เป็น dot -->
+              <!--สร้าง head ของเส้นที่เป็น dot -->
               <circle
                 id="ring-dot"
                 cx="120"
@@ -95,14 +98,12 @@
                 r="4.5"
                 fill="var(--brown)"
                 opacity="0"
-                style="transition: opacity 0.3s">
+                style="transition: opacity 0.3s"
+              />
             </svg>
 
-             <!-- รูป bun เริ่มต้น -->
-            <img
-              id="bun-img"
-              src="bun-1.png"
-              alt="Bun the coffee dog">
+            <!-- รูป bun เริ่มต้น -->
+            <img id="bun-img" src="bun-1.png" alt="Bun the coffee dog" />
           </div>
           <div id="tap-hint">tap to brew</div>
         </div>
@@ -117,7 +118,7 @@
               <div class="uc-cost" id="uc0c">30 jb</div>
               <div class="uc-desc" id="ud0">+click power</div>
             </div>
-             <!-- กล่อง upgrade 2 -->
+            <!-- กล่อง upgrade 2 -->
             <div class="uc locked" id="uc1" onclick="buy(1)">
               <div class="uc-lv" id="ul1">lv 0</div>
               <div class="uc-icon"><i data-lucide="droplet"></i></div>
@@ -125,7 +126,7 @@
               <div class="uc-cost" id="uc1c">80 jb</div>
               <div class="uc-desc" id="ud1">+idle income</div>
             </div>
-             <!-- กล่อง upgrade 3 -->
+            <!-- กล่อง upgrade 3 -->
             <div class="uc locked" id="uc2" onclick="buy(2)">
               <div class="uc-lv" id="ul2">lv 0</div>
               <div class="uc-icon"><i data-lucide="bean"></i></div>
@@ -142,5 +143,8 @@
       </div>
     </div>
 
-</body>
+    <script>
+      lucide.createIcons();
+    </script>
+  </body>
 </html>

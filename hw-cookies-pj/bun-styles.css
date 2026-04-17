@@ -1,0 +1,694 @@
+/* === Setting up ===  */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #f0eee6;
+  --cream: #ffe5cc;
+  --sand: #ffd889;
+  --blue: #99cbe2;
+  --brown: #bc7114;
+  --brown-dk: #8a530f;
+  --white: #ffffff;
+}
+
+body {
+  background: var(--bg);
+  font-family: "Nunito", sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
+}
+
+/* --- กล่องใบนอกที่สุดของ content ---  */
+#game {
+  width: 100%;
+  max-width: 1000px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px 48px;
+  position: relative;
+}
+
+/* ─── HEADER ─── */
+#header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+#game-title {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--brown);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+#idle-pill {
+  background: var(--cream);
+  border: 2px solid var(--sand);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brown);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* CSS จัดการสีและขนาดให้ SVG ที่ถูกเสกมาจาก Lucide โดยอัตโนมัติ */
+#idle-pill svg,
+.uc-icon svg,
+.ms-icon-wrap svg {
+  stroke: var(--brown);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+#idle-pill svg {
+  width: 16px;
+  height: 16px;
+}
+
+.uc-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.ms-icon-wrap svg {
+  width: 16px;
+  height: 16px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.ms-row.done .ms-icon-wrap svg {
+  opacity: 1;
+}
+
+/* ─── LAYOUT GRID (Desktop / Mobile) ─── */
+#game-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  flex: 1;
+}
+
+/* ─── LEFT: CLICKER SECTION ─── */
+#clicker-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#counter-area {
+  text-align: center;
+  margin-bottom: 12px;
+}
+#lbl {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--brown);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+#hcount {
+  font-size: 80px;
+  font-weight: 900;
+  color: var(--brown);
+  line-height: 1;
+  margin-top: -4px;
+}
+#hcount.pop {
+  animation: cpop 0.15s ease;
+}
+@keyframes cpop {
+  50% {
+    transform: scale(1.08);
+  }
+}
+
+#combo-badge {
+  display: none;
+  background: var(--brown);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 900;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-top: 8px;
+}
+#combo-badge.show {
+  display: inline-block;
+  animation: badgepop 0.2s ease;
+}
+@keyframes badgepop {
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+#stage-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--brown);
+  opacity: 0.5;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* ─── BUN + RING WRAPPER ─── */
+#ring-wrap {
+  position: relative;
+  width: 360px;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+#ring-wrap:hover {
+  transform: scale(1.02);
+}
+#ring-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+#bun-img {
+  width: 260px;
+  height: 260px;
+  object-fit: contain;
+  position: relative;
+  z-index: 2;
+  transition: transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 8px 24px rgba(153, 203, 226, 0.4));
+}
+
+#ring-wrap:active #bun-img {
+  transform: scale(0.91);
+}
+
+#ring-wrap.click #bun-img {
+  animation: flinch 0.22s ease;
+}
+
+@keyframes flinch {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(0.91);
+  }
+}
+
+#ring-wrap.milestone #bun-img {
+  animation: mdance 0.65s ease;
+}
+
+@keyframes mdance {
+  0%,
+  100% {
+    transform: scale(1) rotate(0);
+  }
+  20% {
+    transform: scale(1.12) rotate(-9deg);
+  }
+  40% {
+    transform: scale(1.14) rotate(9deg);
+  }
+  60% {
+    transform: scale(1.07) rotate(-5deg);
+  }
+  80% {
+    transform: scale(1.04) rotate(3deg);
+  }
+}
+
+#ring-wrap.jitter #bun-img {
+  animation: jitter 0.3s ease;
+}
+
+@keyframes jitter {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-4px) rotate(-3deg);
+  }
+  40% {
+    transform: translateX(4px) rotate(3deg);
+  }
+  60% {
+    transform: translateX(-3px) rotate(-2deg);
+  }
+  80% {
+    transform: translateX(3px);
+  }
+}
+#ring-wrap.balloon #bun-img {
+  animation: liftoff 3s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes liftoff {
+  0% {
+    transform: scale(1) translateY(0) rotate(0);
+  }
+  30% {
+    transform: scale(1.15) translateY(-20px) rotate(-5deg);
+  }
+  70% {
+    transform: scale(1.4) translateY(-120px) rotate(10deg);
+  }
+  100% {
+    transform: scale(1.8) translateY(-320px) rotate(20deg);
+  }
+}
+
+#tap-hint {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brown);
+  opacity: 0.4;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-top: 8px;
+}
+
+/* ─── RIGHT: MANAGEMENT SECTION ─── */
+#management-section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  background: rgba(255, 255, 255, 0.4);
+  padding: 32px;
+  border-radius: 24px;
+  border: 1px solid rgba(188, 113, 20, 0.1);
+}
+
+/* ─── UPGRADES ─── */
+#upg-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+.uc {
+  background: var(--white);
+  border-radius: 16px;
+  border: 2px solid var(--sand);
+  padding: 16px 8px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    transform 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.uc:hover:not(.locked) {
+  transform: translateY(-4px);
+  border-color: var(--brown);
+  box-shadow: 0 8px 24px rgba(188, 113, 20, 0.15);
+}
+.uc.locked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(40%);
+}
+.uc.bought {
+  animation: cardpop 0.4s ease;
+  background: var(--sand);
+  border-color: var(--brown);
+}
+@keyframes cardpop {
+  40% {
+    transform: scale(1.05);
+  }
+}
+.uc::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 70%
+  );
+  transform: translateX(-100%);
+}
+.uc.bought::after {
+  animation: shimmer 0.5s ease forwards;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.uc-icon {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.uc-name {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--brown);
+  line-height: 1.2;
+}
+.uc-cost {
+  font-size: 13px;
+  color: var(--brown);
+  opacity: 0.8;
+  margin-top: 4px;
+  font-weight: 800;
+}
+.uc-lv {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--brown);
+  opacity: 0.5;
+}
+.uc-desc {
+  font-size: 12px;
+  color: var(--brown);
+  opacity: 0.6;
+  margin-top: 4px;
+  line-height: 1.3;
+}
+
+/* ─── MILESTONE STRIP ─── */
+#ms-strip {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#ms-strip-title {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--brown);
+  opacity: 0.5;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.ms-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ms-icon-wrap {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(188, 113, 20, 0.05);
+}
+.ms-glass {
+  flex: 1;
+  height: 8px;
+  background: rgba(188, 113, 20, 0.1);
+  border-radius: 99px;
+  overflow: hidden;
+  border: 1px solid rgba(188, 113, 20, 0.12);
+  position: relative;
+}
+.ms-fill {
+  height: 100%;
+  background: var(--brown);
+  border-radius: 99px;
+  width: 0%;
+  transition: width 0.3s ease;
+  position: relative;
+}
+.ms-fill::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 99px;
+}
+.ms-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--brown);
+  opacity: 0.5;
+  min-width: 32px;
+  text-align: right;
+  transition: opacity 0.3s;
+}
+.ms-row.done .ms-label {
+  opacity: 1;
+  color: var(--brown-dk);
+}
+
+/* ─── PARTICLES, TOASTS, WIN SCREEN (เหมือนเดิม) ─── */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--brown);
+  animation: floatup 0.9s ease forwards;
+  z-index: 100;
+}
+@keyframes floatup {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0.9) rotate(var(--r));
+  }
+  55% {
+    opacity: 1;
+    transform: translateY(-70px) scale(1.15) rotate(var(--r));
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-120px) scale(0.85) rotate(var(--r));
+  }
+}
+.combo-p {
+  position: absolute;
+  pointer-events: none;
+  font-size: 18px;
+  font-weight: 900;
+  color: #d45a00;
+  animation: floatup2 0.65s ease forwards;
+  z-index: 101;
+}
+@keyframes floatup2 {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1.3);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px) scale(0.9);
+  }
+}
+#toast-area {
+  position: absolute;
+  top: 24px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  z-index: 200;
+  pointer-events: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.toast {
+  background: var(--brown);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 800;
+  padding: 10px 24px;
+  border-radius: 99px;
+  white-space: nowrap;
+  animation: toastpop 2.6s ease forwards;
+  box-shadow: 0 4px 12px rgba(188, 113, 20, 0.3);
+}
+@keyframes toastpop {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.9);
+  }
+  10%,
+  80% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+#flash {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 216, 137, 0.4);
+  pointer-events: none;
+  opacity: 0;
+  z-index: 300;
+}
+#flash.go {
+  animation: flashpulse 0.6s ease forwards;
+}
+@keyframes flashpulse {
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+#win-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 248, 238, 0.95);
+  backdrop-filter: blur(4px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  text-align: center;
+  padding: 32px;
+}
+#win-overlay.show {
+  display: flex;
+}
+#win-title {
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--brown);
+  margin-bottom: 12px;
+  line-height: 1.1;
+}
+#win-sub {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brown);
+  opacity: 0.8;
+  margin-bottom: 32px;
+  line-height: 1.5;
+}
+#win-stats {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--brown);
+  opacity: 0.6;
+  margin-bottom: 32px;
+}
+#win-btn {
+  background: var(--sand);
+  border: 2px solid var(--brown);
+  color: var(--brown);
+  font-size: 18px;
+  font-weight: 900;
+  padding: 16px 48px;
+  border-radius: 99px;
+  cursor: pointer;
+  font-family: "Nunito", sans-serif;
+  transition: 0.2s;
+}
+#win-btn:hover {
+  background: var(--brown);
+  color: var(--bg);
+  transform: scale(1.05);
+}
+#stars-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ─── RESPONSIVE MOBILE ─── */
+@media (max-width: 860px) {
+  #game-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  #management-section {
+    padding: 24px 16px;
+    background: transparent;
+    border: none;
+  }
+  #hcount {
+    font-size: 64px;
+  }
+  #ring-wrap {
+    width: 280px;
+    height: 280px;
+  }
+  #bun-img {
+    width: 200px;
+    height: 200px;
+  }
+  .uc {
+    padding: 12px 6px 10px;
+  }
+  .uc-name {
+    font-size: 12px;
+  }
+  .uc-desc {
+    font-size: 10px;
+  }
+}
+@media (max-width: 380px) {
+  #ring-wrap {
+    width: 240px;
+    height: 240px;
+  }
+  #bun-img {
+    width: 170px;
+    height: 170px;
+  }
+  #upg-row {
+    gap: 8px;
+  }
+}
