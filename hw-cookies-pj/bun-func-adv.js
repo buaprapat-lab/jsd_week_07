@@ -546,4 +546,4 @@ setInterval(() => {
 
 updateUI();
 
-//ถ้าอยากทำให้เวฟได้คุณกันบอกใช้ local storage เก็บ data
+//ถ้าอยากทำให้เซฟได้คุณกันบอกใช้ local storage เก็บ data
